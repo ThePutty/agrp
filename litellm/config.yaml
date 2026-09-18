@@ -1,0 +1,50 @@
+# LiteLLM proxy: ONE OpenAI-compatible endpoint in front of several providers.
+# The Java app only knows the aliases below; providers/models change here, not in code.
+model_list:
+  # Chat: OpenRouter free model (rotates often -> configurable via CHAT_MODEL env)
+  - model_name: chat-model
+    litellm_params:
+      model: os.environ/CHAT_MODEL
+      api_key: os.environ/OPENROUTER_API_KEY
+
+  # Chat fallback 1: smaller Gemma (fast, JSON-friendly)
+  - model_name: chat-model-fallback
+    litellm_params:
+      model: openrouter/google/gemma-4-26b-a4b-it:free
+      api_key: os.environ/OPENROUTER_API_KEY
+
+  # Chat fallback 2: NVIDIA Nemotron (tools + JSON), different upstream pool than Google
+  - model_name: chat-model-fallback-2
+    litellm_params:
+      model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
+      api_key: os.environ/OPENROUTER_API_KEY
+      reasoning_effort: "low"      # reasoning model: keep the thinking short so the JSON fits the token budget
+
+  # Chat fallback 3: another free model with tool calling + JSON support
+  # (the generic openrouter/free router often picks reasoning models that return empty content)
+  - model_name: chat-model-any-free
+    litellm_params:
+      model: openrouter/nex-agi/nex-n2.5-mini:free
+      api_key: os.environ/OPENROUTER_API_KEY
+
+  # Embeddings: local Ollama (multilingual bge-m3, 1024 dims). Data never leaves the machine.
+  - model_name: embed-model
+    litellm_params:
+      model: ollama/bge-m3
+      api_base: http://ollama:11434
+
+litellm_settings:
+  drop_params: true
+  num_retries: 0
+  request_timeout: 90
+  fallbacks:
+    - chat-model: ["chat-model-fallback", "chat-model-fallback-2", "chat-model-any-free"]
+
+router_settings:
+  # After repeated 429/5xx put the model briefly on cooldown so calls go straight to the fallback.
+  allowed_fails: 2          # two failures in a row -> model is set aside
+  cooldown_time: 60         # 60 s is enough for a per-minute 429 to pass; 5 min took all models out at once
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  # Every route needs the master key; the backend exposes GET /api/llm/models for the browser demo.

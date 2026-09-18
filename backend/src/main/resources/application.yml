@@ -1,0 +1,51 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: caselaw-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/caselaw}
+    username: ${SPRING_DATASOURCE_USERNAME:caselaw}
+    password: ${SPRING_DATASOURCE_PASSWORD:caselaw}
+  flyway:
+    enabled: true
+  graphql:
+    graphiql:
+      enabled: true          # http://localhost:8081/graphiql
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+      allowed-methods: GET,POST
+  temporal:
+    connection:
+      target: ${SPRING_TEMPORAL_CONNECTION_TARGET:localhost:7233}
+    namespace: default
+    workers-auto-discovery:
+      packages: cz.demo.caselaw.temporal
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  justice:
+    base-url: ${JUSTICE_BASE_URL:https://rozhodnuti.justice.cz}
+    requests-per-second: 3
+  ingest:
+    source: ${INGEST_SOURCE:api}              # api | snapshot
+    snapshot-path: ${INGEST_SNAPSHOT_PATH:/data/snapshot/decisions.jsonl.gz}
+    default-limit: ${INGEST_DEFAULT_LIMIT:300}
+    max-chunks-per-decision: 8
+  llm:
+    base-url: ${LITELLM_BASE_URL:http://localhost:4000/v1}
+    api-key: ${LITELLM_MASTER_KEY:sk-litellm-demo}
+    chat-model: chat-model
+    embed-model: embed-model
+    embedding-dimension: 1024
+    mock: ${AI_MOCK:false}
+    tools-enabled: ${AI_TOOLS_ENABLED:false}   # bind LangChain4j @Tool decisionDetail to the argue services (free reasoning models tend to loop on tools)
+  search:
+    top-k: 8
+    similar-k: 30

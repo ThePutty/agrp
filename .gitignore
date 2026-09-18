@@ -1,0 +1,24 @@
+# secrets
+.env
+
+# java
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# data cache (snapshot is committed)
+data/cache/
+
+# misc
+*.log
+.idea/
+.vscode/
+*.iml
+frontend/.npm/
+
+# lokální poznámky a prezentace
+docs/

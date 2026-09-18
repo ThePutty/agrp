@@ -1,0 +1,93 @@
+type Query {
+  research(id: ID!): Research
+  ingest(id: ID!): Ingest
+  corpusStats: CorpusStats!
+  decision(id: ID!): Decision
+  "Mermaid diagram of the LangGraph4j research graph, generated from code."
+  graphDiagram: String!
+  "Peek into PostgreSQL/pgvector storage: table and index sizes plus sample chunk rows with a trimmed embedding."
+  dbInspect(decisionIds: [ID!], limit: Int): DbInspect!
+}
+
+type Mutation {
+  "Starts a ResearchWorkflow and returns immediately; poll research(id)."
+  ask(question: String!): Research!
+  "Starts an IngestWorkflow for decisions published between from and to (YYYY-MM-DD)."
+  startIngest(from: String!, to: String!, limit: Int): Ingest!
+}
+
+type Research {
+  id: ID!
+  question: String!
+  status: JobStatus!
+  steps: [Step!]!
+  analysis: QueryAnalysis
+  hits: [Hit!]!
+  answer: Answer
+  outcome: OutcomeStats
+  graph: GraphView!
+  trace: [TraceEntry!]!
+}
+
+type QueryAnalysis { legalConcepts: [String!]!  provisions: [String!]!  searchQueries: [String!]! }
+
+type Hit { rank: Int!  decision: Decision!  snippet: String!  vectorScore: Float  textScore: Float  fusedScore: Float! }
+
+type Decision {
+  id: ID!
+  ecli: String
+  caseNumber: String!
+  court: String!
+  courtCode: String
+  decidedOn: String
+  publishedOn: String
+  subject: String
+  keywords: [String!]!
+  provisions: [String!]!
+  resultTypes: [String!]!
+  verdictText: String
+  justificationText: String
+  sourceUrl: String!
+}
+
+type Answer {
+  forArguments: [Argument!]!
+  againstArguments: [Argument!]!
+  verdict: String!
+  strongerSide: Side!
+  citations: [Citation!]!
+  verifiedCount: Int!
+  unverifiedCount: Int!
+  attempts: Int!
+  model: String
+  mock: Boolean!
+}
+
+type Argument { claim: String!  reasoning: String!  citationIndexes: [Int!]! }
+enum Side { FOR AGAINST BALANCED }
+type Citation { index: Int!  decisionId: ID!  caseNumber: String!  quote: String!  verified: Boolean!  reason: String  side: Side! }
+
+type OutcomeStats { sampleSize: Int!  buckets: [OutcomeBucket!]!  byCourtLevel: [OutcomeBreakdown!]!  byYear: [OutcomeBreakdown!]!  note: String! }
+type OutcomeBucket { category: OutcomeCategory!  count: Int!  share: Float! }
+type OutcomeBreakdown { label: String!  sampleSize: Int!  grantedShare: Float! }
+enum OutcomeCategory { GRANTED PARTIALLY_GRANTED DISMISSED OTHER }
+
+type GraphView { mermaid: String!  nodes: [GraphNode!]! }
+type GraphNode { name: String!  status: StepStatus!  startedAt: String  durationMs: Int  attempt: Int  detail: String }
+
+type Ingest { id: ID!  status: JobStatus!  requested: Int!  fetched: Int!  embedded: Int!  failed: Int!  steps: [Step!]!  trace: [TraceEntry!]! }
+type CorpusStats { decisions: Int!  chunks: Int!  courts: [String!]!  from: String  to: String }
+
+type Step { name: String!  status: StepStatus!  durationMs: Int  attempts: Int  detail: String }
+enum StepStatus { PENDING RUNNING DONE FAILED SKIPPED }
+enum JobStatus { RUNNING COMPLETED FAILED }
+type TraceEntry { layer: String!  name: String!  status: StepStatus!  durationMs: Int  detail: String }
+
+type DbInspect { tables: [DbTable!]!  sections: [DbSection!]!  embeddingDims: Int!  chunkRows: [DbChunkRow!]! }
+type DbTable { name: String!  rows: Int!  totalSize: String!  indexes: [DbIndex!]! }
+type DbIndex { name: String!  kind: String!  size: String! }
+type DbSection { section: String!  chunks: Int! }
+type DbChunkRow {
+  id: ID!  decisionId: ID!  caseNumber: String!  seq: Int!  section: String!  content: String!
+  embeddingPrefix: [Float!]!  embeddingNorm: Float  tsvPrefix: String!
+}

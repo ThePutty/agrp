@@ -1,0 +1,120 @@
+# CODEXIS hackathon demo: AI case-law search with verified citations.
+# `docker compose up --build` starts everything. Infrastructure first, app on top.
+services:
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: caselaw
+      POSTGRES_PASSWORD: caselaw
+      POSTGRES_DB: caselaw
+    ports: ["5432:5432"]
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+      - "./postgres/init-litellm-db.sql:/docker-entrypoint-initdb.d/10-litellm.sql:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U caselaw -d caselaw"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  temporal:
+    image: temporalio/temporal:latest
+    command: ["server", "start-dev", "--ip", "0.0.0.0", "--db-filename", "/home/temporal/temporal.db"]
+    ports:
+      - "7233:7233"   # gRPC (backend worker + client)
+      - "8233:8233"   # Temporal Web UI
+    volumes: ["temporal-data:/home/temporal"]
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  ollama:
+    image: ollama/ollama:latest
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    ports: ["11434:11434"]
+    volumes:
+      - "ollama-models:/root/.ollama"
+      - "./ollama/entrypoint.sh:/entrypoint.sh:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list | grep -q bge-m3"]
+      interval: 10s
+      timeout: 5s
+      retries: 120
+      start_period: 30s
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    ports: ["4000:4000"]
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-litellm-demo}
+      CHAT_MODEL: ${CHAT_MODEL:-openrouter/openrouter/free}
+      OR_SITE_URL: https://github.com/demo/caselaw-ai
+      OR_APP_NAME: caselaw-ai-demo
+      # Admin UI (http://localhost:4000/ui): request log, spend, models. Needs its own DB.
+      DATABASE_URL: postgresql://caselaw:caselaw@postgres:5432/litellm
+      STORE_MODEL_IN_DB: "false"
+      UI_USERNAME: ${LITELLM_UI_USERNAME:-admin}
+      UI_PASSWORD: ${LITELLM_UI_PASSWORD:-admin}
+      LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:-sk-salt-demo}
+    volumes: ["./litellm/config.yaml:/app/config.yaml:ro"]
+    depends_on:
+      ollama:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:4000/health/liveliness')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    ports: ["8081:8081"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/caselaw
+      SPRING_DATASOURCE_USERNAME: caselaw
+      SPRING_DATASOURCE_PASSWORD: caselaw
+      SPRING_TEMPORAL_CONNECTION_TARGET: temporal:7233
+      LITELLM_BASE_URL: http://litellm:4000/v1
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-litellm-demo}
+      AI_MOCK: ${AI_MOCK:-false}
+      AI_TOOLS_ENABLED: ${AI_TOOLS_ENABLED:-false}
+      INGEST_SOURCE: ${INGEST_SOURCE:-api}
+      INGEST_DEFAULT_LIMIT: ${INGEST_DEFAULT_LIMIT:-300}
+      JUSTICE_BASE_URL: ${JUSTICE_BASE_URL:-https://rozhodnuti.justice.cz}
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    volumes: ["./data:/data:ro"]     # bundled snapshot for offline ingest (INGEST_SOURCE=snapshot)
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      litellm:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8081/actuator/health | grep -q UP"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_GRAPHQL_URL: http://localhost:8081/graphql   # browser-side URL (baked at build time)
+    ports: ["3000:3000"]
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  postgres-data:
+  temporal-data:
+  ollama-models:

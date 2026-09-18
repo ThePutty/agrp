@@ -1,0 +1,70 @@
+{
+  "uuid": "74d5dab8-9066-4b00-bc39-820d12ba6af8",
+  "metadata": {
+    "type": "JUDGEMENT",
+    "ecli": "ECLI:CZ:OSZN:2023:21.C.250.2023.1",
+    "publishedAt": "2024-03-05",
+    "decisionAt": "2023-11-30",
+    "caseNumber": {
+      "senate": 21,
+      "registry": "C",
+      "index": 250,
+      "year": 2023,
+      "pageNumber": 64
+    },
+    "solver": {
+      "titlesBefore": "Mgr. Bc.",
+      "firstName": "Boris",
+      "lastName": "Janíček",
+      "titlesAfter": "",
+      "function": ""
+    },
+    "courtCode": "OSZN",
+    "caseResultType": [
+      "ZAMITNUTI"
+    ],
+    "caseSubject": "124 696 Kč s příslušenstvím",
+    "specialType": [],
+    "affectedDocs": [],
+    "regulations": [
+      {
+        "paragraphNumber": "2991",
+        "lexNumber": 89,
+        "lexYear": 2012,
+        "lexType": "PREDPIS_ZAKON"
+      },
+      {
+        "paragraphNumber": "2390",
+        "lexNumber": 89,
+        "lexYear": 2012,
+        "lexType": "PREDPIS_ZAKON"
+      },
+      {
+        "paragraphNumber": "",
+        "lexNumber": 99,
+        "lexYear": 1963,
+        "lexType": "PREDPIS_ZAKON"
+      },
+      {
+        "paragraphNumber": "1970",
+        "lexNumber": 351,
+        "lexYear": 2013,
+        "lexType": "PREDPIS_NARIZENI_VLADY"
+      },
+      {
+        "paragraphNumber": "1",
+        "lexNumber": 257,
+        "lexYear": 2016,
+        "lexType": "PREDPIS_ZAKON"
+      }
+    ],
+    "flags": [
+      "BEZDUVODNE_OBOHACENI",
+      "PENEZITE_PLNENI",
+      "POSTOUPENI_POHLEDAVKY",
+      "SMLOUVA_O_UVERU"
+    ]
+  },
+  "verdictText": "I. Žalovaný je povinen zaplatit žalobkyni:\na) částku ve výši 19 600 Kč, kapitalizovaný zákonný úrok z prodlení ve výši 3 309,31 Kč, zákonný úrok z prodlení z částky 19 600 Kč ode dne 15. 12. 2022 do zaplacení ve výši\r8,25 % ročně,\nb) částku ve výši 19 000 Kč, kapitalizovaný zákonný úrok z prodlení ve výši 3 208 Kč, zákonný úrok z prodlení z částky 19 000 Kč ode dne 15. 12. 2022 do zaplacení ve výši\r8,25 % ročně,\na to vše do tří dnů od právní moci rozsudku.\nII. Návrh, jímž se žalobkyně domáhá, aby jí žalovaný zaplatil:\na) částku ve výši 28 788 Kč, kapitalizovaný zákonný úrok z prodlení ve výši ",
+  "justificationText": "1. Návrhem doručeným soudu dne 29. 6. 2023 se žalobkyně domáhá zaplacení dlužné částky\r124 696 Kč s příslušenstvím.\n2. Žalobkyně k odůvodnění uvedla, že právní předchůdkyně žalobkyně společnost [právnická osoba] uzavřela s žalovaným dne [datum] smlouvu o spotřebitelské úvěru [číslo] na základě níž byla žalovanému poskytnuta částka ve výši 25 000 Kč, splatná ve 30 měsíčních splátkách po 1 793 Kč s poslední splátkou do 29. 7. 2022, kdy poskytnuté finanční prostředky měly být zaplaceny spolu s poplatky a úroky. Je žádáno o zaplacení dlužné jistiny ve výši 22 234,22 Kč, dlužných poplatků ve výši 26 153,78 Kč, kapitalizovaných úroků ve výši 2 094,13 Kč vzniklých sazbou 24,57 % ročně z dlužné jistiny ve výši 22 234,22 Kč od 30. 7. 2022 do 14. 12. 2022, kapitalizovaných zákonných úroků z prodlení ve výši 3 806,22 Kč vzniklých sazbou 8,25 % ročně z dlužné jistiny ve výši 22 234,22 Kč od 28. 11. 2020 do 14. 12. 2022. Dále je žádáno zaplacení úroků ve výši 24,57 % ročně a úroků z prodlení ve výši 8,25 % ročně z dlužné jistiny ve výši 22 234,22 Kč od 15. 12. 2022 do zaplacení.\n3. Žalobkyně dále k odůvodnění uvedla, že právní předchůdkyně žalobkyně společnost [právnická osoba] uzavřela s žalov"
+}

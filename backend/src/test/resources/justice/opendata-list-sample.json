@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "jednaciCislo": "21 C 250/2023-64",
+      "soud": "Okresní soud ve Znojmě",
+      "autor": "Mgr. Bc. Boris Janíček",
+      "ecli": "ECLI:CZ:OSZN:2023:21.C.250.2023.1",
+      "predmetRizeni": "124 696 Kč s příslušenstvím",
+      "datumVydani": "2023-11-30",
+      "datumZverejneni": "2024-03-05",
+      "klicovaSlova": [
+        "bezdůvodné obohacení",
+        "peněžité plnění",
+        "postoupení pohledávky",
+        "smlouva o úvěru"
+      ],
+      "zminenaUstanoveni": [
+        "§ 2991 z. č. 89/2012 Sb.",
+        "§ 2390 z. č. 89/2012 Sb.",
+        "§  z. č. 99/1963 Sb.",
+        "§ 1970 nař. vl. č. 351/2013 Sb.",
+        "§ 1 z. č. 257/2016 Sb."
+      ],
+      "odkaz": "https://rozhodnuti.justice.cz/api/finaldoc/74d5dab8-9066-4b00-bc39-820d12ba6af8"
+    },
+    {
+      "jednaciCislo": "11 C 104/2023-45",
+      "soud": "Okresní soud ve Žďáru nad Sázavou",
+      "autor": "Mgr. Petr Prachař",
+      "ecli": "ECLI:CZ:OSZR:2024:11.C.104.2023.1",
+      "predmetRizeni": "O zaplacení 29 781 Kč s příslušenstvím",
+      "datumVydani": "2024-01-02",
+      "datumZverejneni": "2024-03-05",
+      "klicovaSlova": [
+        "peněžité plnění",
+        "smlouva o úvěru"
+      ],
+      "zminenaUstanoveni": [
+        "§ 1970 z. č. 89/2012 Sb.",
+        "§ 2395 z. č. 89/2012 Sb.",
+        "§ 577 z. č. 89/2012 Sb."
+      ],
+      "odkaz": "https://rozhodnuti.justice.cz/api/finaldoc/28e59c3e-67a8-4b7e-96a4-02a5fc00b29f"
+    },
+    {
+      "jednaciCislo": "21 C 117/2023-44",
+      "soud": "Okresní soud ve Znojmě",
+      "autor": "Mgr. Bc. Boris Janíček",
+      "ecli": "ECLI:CZ:OSZN:2024:21.C.117.2023.1",
+      "predmetRizeni": "rozvod manželství",
+      "datumVydani": "2024-02-15",
+      "datumZverejneni": "2024-03-05",
+      "klicovaSlova": [
+        "cizina",
+        "rozvod manželství"
+      ],
+      "zminenaUstanoveni": [
+        "§ 13 vyhl. č. 177/1996 Sb.",
+        "§ 7 vyhl. č. 177/1996 Sb.",
+        "§ 23 z. č. 292/2013 Sb.",
+        "§ 755 z. č. 89/2012 Sb.",
+        "§ 11 vyhl. č. 177/1996 Sb.",
+        "§ 148 z. č. 99/1963 Sb.",
+        "§ 756 z. č. 89/2012 Sb.",
+        "§ 140 z. č. 99/1963 Sb.",
+        "§ 49 z. č. 91/2012 Sb."
+      ],
+      "odkaz": "https://rozhodnuti.justice.cz/api/finaldoc/b384f999-4f52-4fd6-b6b3-ac1c345f2f53"
+    }
+  ],
+  "numberOfItems": 100,
+  "pageSize": 100,
+  "pageNumber": 0,
+  "totalPages": 3,
+  "totalElements": 295
+}
